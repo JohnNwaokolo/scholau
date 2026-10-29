@@ -1,22 +1,118 @@
-# SCHOLAU
+# ScholaU
 
-A university learning platform that connects each student's academic curriculum with lessons, assessments, and competitive learning. This monorepo contains the web application, shared packages, and the database schema and access rules.
+**Your university courses. Clearer lessons. Focused practice. Competitive learning.**
 
-Content access follows the student's university, programme, level, and semester. PostgreSQL enforces authorization, progress, and reward rules; the application consumes those contracts through a shared API layer.
+[Live application](https://scholau.vercel.app) · [John Nwaokolo](https://github.com/JohnNwaokolo) · [Organization repository](https://github.com/D-GENIUSES/SCHOLAU) · [Technical documentation](docs/README.md)
 
-## Capabilities
+ScholaU is a university learning platform that brings curriculum-based study, exam preparation, and social competition into one application. Students follow courses relevant to their academic profile, study structured lessons, practise with feedback, take mock assessments, and challenge other students in timed quiz battles.
 
-| Area | Scope |
+The platform also gives approved lecturers tools for their assigned courses and administrators tools to review content, manage access, and operate the academic catalogue. This repository contains the application source, shared TypeScript packages, database migrations, and technical documentation.
+
+## Project ownership and this repository
+
+This is **John Nwaokolo's personal portfolio copy of ScholaU**, a project developed within **D-GENIUSES**. It presents the application and its engineering work under a personal GitHub URL while retaining the project's original Git history and contributor attribution.
+
+The [D-GENIUSES repository](https://github.com/D-GENIUSES/SCHOLAU) remains the upstream development repository. This copy is maintained separately; updates do not synchronize automatically. Its `main` branch starts from upstream `main`, with a portfolio-specific README. The upstream `staging` branch is retained separately for reference. The commit history records individual contributions; this copy does not imply exclusive authorship of every contribution.
+
+## The problem ScholaU addresses
+
+University study often means moving between course outlines, lecture materials, revision questions, and separate tools for tracking progress. Generic question banks can also miss the student's actual programme, level, or semester.
+
+ScholaU organizes learning around the student's academic context. Content access follows university, programme, level, semester, and course enrollment. Students can move from a course lesson to a knowledge check, revisit difficult topics, prepare under assessment conditions, and practise with classmates in the same learning environment.
+
+## Student experience
+
+### Academic onboarding and course selection
+
+- Register with email and password, verify an email address, and recover account access when needed.
+- Use Google authentication when the hosted provider is configured; new Google identities complete registration before accessing protected learning features.
+- Set an academic profile so the application can present relevant course offerings.
+- Manage personal profile details, profile imagery, and ranking visibility.
+
+### Structured course learning
+
+- Browse course offerings and open the lessons available for each course.
+- Study structured lesson content, including explanations and supported learning assets.
+- Record lesson progress and use lesson-linked knowledge checks to assess understanding.
+- Return to scheduled topic reviews as part of the mastery workflow.
+
+Lesson completion and mastery are distinct: completing a lesson records progress, while qualifying assessment performance drives learning rewards. Content must be published and available to the student's academic context before it can be accessed.
+
+### Practice, mock exams, and results
+
+- Use review assessments to check understanding of a lesson or topic.
+- Practise course questions and use mock assessments for exam preparation.
+- Work through the assessment player, submit attempts, and review results and available explanations.
+- Keep attempt history and progress tied to the authenticated learner.
+
+Assessment access, submission, grading, and rewards are validated through backend contracts. The browser presents the experience; it is not the authority for marks or XP.
+
+### Friends and live quiz battles
+
+- Find students by name or handle, send friend requests, and manage friendships.
+- Challenge eligible friends, accept invitations, or enter random matchmaking.
+- Select shared course offerings for directed challenges, subject to enrollment and published question availability.
+- Answer timed questions, see match outcomes, and revisit battle history.
+
+Battles use server-controlled reading intervals and answer deadlines. Selected question versions and timing survive reconnection, while future questions and answer keys remain hidden from active player payloads. Social restrictions and enrollment checks are enforced on the server.
+
+### Progress, XP, and leaderboards
+
+- Earn XP through qualifying learning and battle activity.
+- Track levels, badges, review opportunities, and reward history.
+- Compare progress through global and faculty leaderboards, with profile visibility controls.
+
+The reward system uses an append-only ledger and explicit award limits. XP is a progress signal; it is not spent or used to lock course content. See the [XP specification](docs/features/xp.md) for exact rules and migration-specific behavior.
+
+### Notifications and installable access
+
+The web application includes a manifest for installation, an offline route, notification settings, and browser push integration. Push delivery depends on browser support, permission, subscription state, and configured backend delivery services. Installation does not make all authenticated course workflows available offline.
+
+## Lecturer and administrator tools
+
+| Role | Capabilities |
 | --- | --- |
-| Identity | Registration, email verification, account recovery, and academic profiles. |
-| Learning | Course offerings, lessons, and progress tracking. |
-| Assessment | Review, practice, mock exams, and result review. |
-| Competition | Battles, invitations, history, XP, and leaderboards. |
-| Teaching | Lecturer registration requests and approved lecturer access. |
-| Administration | Content review and publication, imports, user management, reports, and auditing. |
-| Privacy | Access controls, private assets, and account erasure. |
+| Approved lecturer | Access assigned courses, publish course announcements, manage course challenges, and inspect challenge participation and results. |
+| Content administrator | Import material, review and publish content, and manage course offerings and academic catalogues. |
+| Platform administrator | Manage users and lecturer applications, inspect reports, review battle operations, and access audit tools. |
 
-Features present in source are not necessarily deployed to production. Lessons and assessments require published content and appropriate access. Development fixtures do not represent production academic content.
+**Course challenges** let assigned lecturers publish immediate or scheduled assessments using eligible bank questions, authored questions, or both. Publication freezes question content. Students receive one attempt, answers save during the attempt, and results remain hidden until the shared deadline. Challenge results do not award official grades or XP. See the [course challenge specification](docs/features/course-challenges.md).
+
+Role-specific navigation is backed by authenticated database authorization. Hiding a control in the interface is not the access boundary.
+
+## Engineering design
+
+ScholaU uses a TypeScript monorepo with explicit boundaries between the interface, data access, shared domain contracts, and persistent business rules.
+
+```text
+Student / Lecturer / Administrator
+                 |
+        Next.js web application
+                 |
+      Shared API and domain packages
+                 |
+ Supabase Auth + PostgreSQL RPCs and RLS
+                 |
+ Academic content, attempts, progress,
+ challenges, battles, rewards, and audit data
+
+Private learning assets -> Supabase Storage or Cloudflare R2
+Browser push delivery  -> Supabase functions and delivery jobs
+```
+
+Key implementation decisions include:
+
+- **Academic access boundaries:** enrollment and academic scope govern eligible learning content and competition.
+- **Database-enforced rules:** PostgreSQL functions and row-level security enforce protected reads, writes, grading, rewards, and role access.
+- **Versioned content:** published assessment content and challenge snapshots preserve the question version used by a learner.
+- **Server-controlled timing:** battle rounds and challenge deadlines do not depend on keeping a browser timer or tab open.
+- **Private asset access:** lesson assets use an authorized storage path rather than unrestricted public object access.
+- **Shared contracts:** `@scholau/api` and `@scholau/core` keep data access and domain validation reusable across the interface.
+- **Operational separation:** deploying the web app, applying SQL migrations, and provisioning credentials are separate release steps.
+
+## Scope and availability
+
+This README describes functionality represented in the source. Availability in a running environment depends on its deployed commit, database migrations, published content, user permissions, and provider configuration. Sample development fixtures are not a claim of complete university curriculum coverage. Historical verification notes in the documentation describe the environment and date of those checks.
 
 ## Architecture
 
@@ -80,8 +176,8 @@ Use the pnpm version declared by the repository. If your installation includes C
 ### Installation
 
 ```bash
-git clone https://github.com/D-GENIUSES/SCHOLAU.git
-cd SCHOLAU
+git clone https://github.com/JohnNwaokolo/scholau.git
+cd scholau
 pnpm install --frozen-lockfile
 ```
 
