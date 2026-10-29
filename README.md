@@ -1,24 +1,24 @@
-# ScholaU
+# ScholAu
 
 **Your university courses. Clearer lessons. Focused practice. Competitive learning.**
 
 [Live application](https://scholau.com) · [John Nwaokolo](https://github.com/JohnNwaokolo) · [Organization repository](https://github.com/D-GENIUSES/SCHOLAU) · [Technical documentation](docs/README.md)
 
-ScholaU is a university learning platform that brings curriculum-based study, exam preparation, and social competition into one application. Students follow courses relevant to their academic profile, study structured lessons, practise with feedback, take mock assessments, and challenge other students in timed quiz battles.
+ScholAu is a university learning platform that brings curriculum-based study, exam preparation, and social competition into one application. Students follow courses relevant to their academic profile, study structured lessons, practise with feedback, take mock assessments, and challenge other students in timed quiz battles.
 
 The platform also gives approved lecturers tools for their assigned courses and administrators tools to review content, manage access, and operate the academic catalogue. This repository contains the application source, shared TypeScript packages, database migrations, and technical documentation.
 
 ## Project ownership and this repository
 
-This is **John Nwaokolo's personal portfolio copy of ScholaU**, a project developed within **D-GENIUSES**. It presents the application and its engineering work under a personal GitHub URL while retaining the project's original Git history and contributor attribution.
+This is **John Nwaokolo's personal portfolio copy of ScholAu**, a project developed within **D-GENIUSES**. It presents the application and its engineering work under a personal GitHub URL while retaining the project's original Git history and contributor attribution.
 
 The [D-GENIUSES repository](https://github.com/D-GENIUSES/SCHOLAU) remains the upstream development repository. This copy is maintained separately; updates do not synchronize automatically. Its `main` branch starts from upstream `main`, with a portfolio-specific README. The upstream `staging` branch is retained separately for reference. The commit history records individual contributions; this copy does not imply exclusive authorship of every contribution.
 
-## The problem ScholaU addresses
+## The problem ScholAu addresses
 
 University study often means moving between course outlines, lecture materials, revision questions, and separate tools for tracking progress. Generic question banks can also miss the student's actual programme, level, or semester.
 
-ScholaU organizes learning around the student's academic context. Content access follows university, programme, level, semester, and course enrollment. Students can move from a course lesson to a knowledge check, revisit difficult topics, prepare under assessment conditions, and practise with classmates in the same learning environment.
+ScholAu organizes learning around the student's academic context. Content access follows university, programme, level, semester, and course enrollment. Students can move from a course lesson to a knowledge check, revisit difficult topics, prepare under assessment conditions, and practise with classmates in the same learning environment.
 
 ## Student experience
 
@@ -82,7 +82,7 @@ Role-specific navigation is backed by authenticated database authorization. Hidi
 
 ## Engineering design
 
-ScholaU uses a TypeScript monorepo with explicit boundaries between the interface, data access, shared domain contracts, and persistent business rules.
+ScholAu uses a TypeScript monorepo with explicit boundaries between the interface, data access, shared domain contracts, and persistent business rules.
 
 ```text
 Student / Lecturer / Administrator
