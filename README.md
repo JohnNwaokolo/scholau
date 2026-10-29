@@ -2,7 +2,7 @@
 
 **Your university courses. Clearer lessons. Focused practice. Competitive learning.**
 
-[Live application](https://scholau.vercel.app) · [John Nwaokolo](https://github.com/JohnNwaokolo) · [Organization repository](https://github.com/D-GENIUSES/SCHOLAU) · [Technical documentation](docs/README.md)
+[Live application](https://scholau.com) · [John Nwaokolo](https://github.com/JohnNwaokolo) · [Organization repository](https://github.com/D-GENIUSES/SCHOLAU) · [Technical documentation](docs/README.md)
 
 ScholaU is a university learning platform that brings curriculum-based study, exam preparation, and social competition into one application. Students follow courses relevant to their academic profile, study structured lessons, practise with feedback, take mock assessments, and challenge other students in timed quiz battles.
 
